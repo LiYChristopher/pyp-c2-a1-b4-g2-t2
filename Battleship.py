@@ -42,6 +42,11 @@ class Submarine(Ship):
         self.orientation = orientation
         self.count = count
 
+class Player(object):
+    def __init__(self, name):
+        self.name = name
+
+
 if __name__ == '__main__':
 
     test = Aircraft()
