@@ -24,7 +24,8 @@ class Grid(object):
         ''' takes in a list of ships and places them on the grid if ships fit
             otherwise throws and OutOfBoundsError.
         '''
-        pass
+        #TODO: implement the placement behavior
+        return ships
 
 
 class Ship(object):
@@ -36,15 +37,16 @@ class Ship(object):
         self.orientation = orientation
 
     def __repr__(self):
-        return self.__class__.__name__
+        return '{cls}({c}, {p}, {o})'.format(cls=self.__class__.__name__,
+                                             c=self.count, p=self.position,
+                                             o=self.orientation)
 
 
 class Aircraft(Ship):
     ''' Aircraft class
     '''
     def __init__(self, count, position, orientation):
-        from pudb import set_trace; set_trace()
-        super().__init__(count, position, orientation)
+        super(Aircraft, self).__init__(count, position, orientation)
         self.size = 5
 
 
@@ -52,7 +54,7 @@ class Submarine(Ship):
     ''' Submarine class
     '''
     def __init__(self, count, position, orientation):
-        super().__init__(count, position, orientation)
+        super(Submarine, self).__init__(count, position, orientation)
         self.size = 3
 
 
@@ -60,7 +62,7 @@ class PatrolBoat(Ship):
     ''' PatrolBoat class
     '''
     def __init__(self, count, position, orientation):
-        super().__init__(count, position, orientation)
+        super(PatrolBoat, self).__init__(count, position, orientation)
         self.size = 2
 
 
@@ -80,9 +82,9 @@ def choose_ships():
     submarines_input = raw_input('Position, Orientation for Submarines: ')
     patrol_boats_input = raw_input('Position, Orientation for Patrol Boats: ')
 
-    a_pos, a_orient = aircrafts_input.split(',')
-    s_pos, s_orient = submarines_input.split(',')
-    pb_pos, pb_orient = patrol_boats_input.split(',')
+    a_pos, a_orient = map(str.strip, aircrafts_input.split(','))
+    s_pos, s_orient = map(str.strip, submarines_input.split(','))
+    pb_pos, pb_orient = map(str.strip, patrol_boats_input.split(','))
 
     # get number of aircrafts from show_available_ships
     numa, nums, numpb = show_available_ships()
@@ -96,7 +98,7 @@ def choose_ships():
 
 def initialize_grid():
     g = Grid()
-    g.place(choose_ships())
+    print g.place(choose_ships())
 
 
 if __name__ == '__main__':
