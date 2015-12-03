@@ -33,7 +33,7 @@ class Grid(object):
         for loc in allocation:
             self.grid[loc] = ship.marker
 
-    def place(self, *ships):
+    def place(self, ships):
         ''' takes in a list of ships and places them on the grid if ships fit
             otherwise throws and OutOfBoundsError.
             #TODO: Need to implement this
@@ -102,39 +102,48 @@ class PatrolBoat(Ship):
 def show_available_ships():
     ''' creates random number of aircrafts, submarines and patrol boats
     '''
-    num_a, num_s, num_pb = [randint(1, 4) for i in range(3)]
+    max_ships = 5
+    num_a, num_s, num_pb = 0, 0, 0
+    while (num_a + num_s + num_pb) != max_ships:
+        num_a = randint(1, 2)       # max aircrafts = 2
+        num_s = randint(1, 3)       # max submarines = 3
+        num_pb = randint(1, 4)      # max patrolboats = 4
     print 'You have:'
     print '{} Aircraft (size = 5)'.format(num_a)
     print '{} Submarine (size = 3)'.format(num_s)
     print '{} Patrol Boat (size = 2)'.format(num_pb)
-    return num_a, num_s, num_pb
+    # offsetting numbers with +1 for correct values as range starts at 1
+    return num_a+1, num_s+1, num_pb+1
 
 
 def choose_ships(numa, nums, numpb):
-    ''' follows the Defend strategy for creating the ships.
-        return the actual relevant ship objects
-    '''
-    aircrafts_input = raw_input('Position, Orientation for Aircrafts: ')
-    submarines_input = raw_input('Position, Orientation for Submarines: ')
-    patrol_boats_input = raw_input('Position, Orientation for Patrol Boats: ')
+    ship_list = []
+    for i in range(1, numa):
+        aircraft_input = raw_input('Pos, Orient for Aircraft #{}: '.
+                                   format(i))
+        a_pos, a_orient = map(str.strip, aircraft_input.split(','))
+        ship_list.append(Aircraft(i, a_pos, a_orient))
 
-    a_pos, a_orient = map(str.strip, aircrafts_input.split(','))
-    s_pos, s_orient = map(str.strip, submarines_input.split(','))
-    pb_pos, pb_orient = map(str.strip, patrol_boats_input.split(','))
+    for j in range(1, nums):
+        submarines_input = raw_input('Pos, Orient for Sub #{}: '.
+                                     format(j))
+        s_pos, s_orient = map(str.strip, submarines_input.split(','))
+        ship_list.append(Submarine(j, s_pos, s_orient))
 
-    # create ships
-    aircrafts = Aircraft(numa, a_pos, a_orient)
-    submarines = Submarine(nums, s_pos, s_orient)
-    patrol_boats = PatrolBoat(numpb, pb_pos, pb_orient)
-    return aircrafts, submarines, patrol_boats
+    for k in range(1, numpb):
+        patrol_input = raw_input('Pos, Orient for Patrol Boat #{}: '.
+                                 format(k))
+        pb_pos, pb_orient = map(str.strip, patrol_input.split(','))
+        ship_list.append(PatrolBoat(k, pb_pos, pb_orient))
+
+    return ship_list
 
 
 def initialize():
     g = Grid()
-    print g.grid
     numa, nums, numpb = show_available_ships()
-    air, sub, pb = choose_ships(numa, nums, numpb)
-    g.place(air, sub, pb)
+    print g.grid
+    g.place(choose_ships(numa, nums, numpb))
     print g.grid
 
 if __name__ == '__main__':
