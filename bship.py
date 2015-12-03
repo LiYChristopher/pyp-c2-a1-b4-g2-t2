@@ -41,7 +41,6 @@ class Grid(object):
         for ship in ships:
             place_y = ship.position[0].capitalize()
             place_x = int(ship.position[1])
-
             self._allocator(ship.orientation.lower(), place_x, place_y, ship)
         return self.grid
 
