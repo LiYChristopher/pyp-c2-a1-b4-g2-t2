@@ -24,7 +24,26 @@ class Grid(object):
             otherwise throws and OutOfBoundsError.
             #TODO: Need to implement this
         '''
-        return ships
+        for ship in ships:
+            place_y = ship.position[0].capitalize()
+            place_x = int(ship.position[1])
+
+            if ship.orientation.lower() == 'h':
+                allocation = [place_y + str(i) for i in range(place_x,
+                                place_x + ship.size)]
+                print allocation
+                for loc in allocation:
+                    self.grid[loc] = ship.marker
+
+            elif ship.orientation.lower() == 'v':
+                allocation = [chr(i) + str(place_x) for i in range(ord(place_y),
+                                ord(place_y) + ship.size)]
+                print allocation
+                for loc in allocation:
+                    self.grid[loc] = ship.marker
+
+            else:
+                print "That's not proper orientation"
 
 
 class Ship(object):
@@ -47,6 +66,7 @@ class Aircraft(Ship):
     '''
     def __init__(self, count, position, orientation):
         super(Aircraft, self).__init__(count, position, orientation)
+        self.marker = 'A'
         self.size = 5
 
 
@@ -55,6 +75,7 @@ class Submarine(Ship):
     '''
     def __init__(self, count, position, orientation):
         super(Submarine, self).__init__(count, position, orientation)
+        self.marker = 'S'
         self.size = 3
 
 
@@ -63,6 +84,7 @@ class PatrolBoat(Ship):
     '''
     def __init__(self, count, position, orientation):
         super(PatrolBoat, self).__init__(count, position, orientation)
+        self.marker = 'P'
         self.size = 2
 
 
@@ -105,6 +127,8 @@ def initialize():
     air, sub, pb = choose_ships(numa, nums, numpb)
 
     print g.place(air, sub, pb)
+    print g.grid
 
 if __name__ == '__main__':
+    grid = Grid()
     initialize()
