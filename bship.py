@@ -15,16 +15,15 @@ class Grid(object):
         return 'Grid({})'.format(self.grid)
 
     def __str__(self):
-        out = []
-        for i in range(0, 100, 10):
-            out.append(self.grid.keys()[i:(i+10):])
-        return str(out)
+        ''' Need to implement a way to show the grid in a good format
+        '''
+        pass
 
     def place(self, *ships):
         ''' takes in a list of ships and places them on the grid if ships fit
             otherwise throws and OutOfBoundsError.
+            #TODO: Need to implement this
         '''
-        #TODO: implement the placement behavior
         return ships
 
 
@@ -37,6 +36,7 @@ class Ship(object):
         self.orientation = orientation
 
     def __repr__(self):
+        # nice to have a repr which shows the actual subclass names
         return '{cls}({c}, {p}, {o})'.format(cls=self.__class__.__name__,
                                              c=self.count, p=self.position,
                                              o=self.orientation)
@@ -77,7 +77,10 @@ def show_available_ships():
     return num_a, num_s, num_pb
 
 
-def choose_ships():
+def choose_ships(numa, nums, numpb):
+    ''' follows the Defend strategy for creating the ships.
+        return the actual relevant ship objects
+    '''
     aircrafts_input = raw_input('Position, Orientation for Aircrafts: ')
     submarines_input = raw_input('Position, Orientation for Submarines: ')
     patrol_boats_input = raw_input('Position, Orientation for Patrol Boats: ')
@@ -86,9 +89,6 @@ def choose_ships():
     s_pos, s_orient = map(str.strip, submarines_input.split(','))
     pb_pos, pb_orient = map(str.strip, patrol_boats_input.split(','))
 
-    # get number of aircrafts from show_available_ships
-    numa, nums, numpb = show_available_ships()
-
     # create ships
     aircrafts = Aircraft(numa, a_pos, a_orient)
     submarines = Submarine(nums, s_pos, s_orient)
@@ -96,10 +96,15 @@ def choose_ships():
     return aircrafts, submarines, patrol_boats
 
 
-def initialize_grid():
+def initialize():
     g = Grid()
-    print g.place(choose_ships())
 
+    # get number of aircrafts from show_available_ships
+    numa, nums, numpb = show_available_ships()
+
+    air, sub, pb = choose_ships(numa, nums, numpb)
+
+    print g.place(air, sub, pb)
 
 if __name__ == '__main__':
-    initialize_grid()
+    initialize()
